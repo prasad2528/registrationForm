@@ -11,16 +11,12 @@ class RegistrationForm extends Component {
     lastNameErrorMsg: false,
   }
 
-  onShowFirstNameErrorMsg = () => {
-    this.setState({firstNameErrorMsg: true})
-  }
-
-  onShowLastNameErrorMsg = () => {
-    this.setState({lastNameErrorMsg: true})
-  }
-
   onShowResult = () => {
-    this.setState({isShowResult: true})
+    this.setState({
+      isShowResult: true,
+      firstNameErrorMsg: false,
+      lastNameErrorMsg: false,
+    })
     this.renderResultContainer()
   }
 
@@ -29,27 +25,45 @@ class RegistrationForm extends Component {
     event.preventDefault()
     console.log('submited')
     if (firstName === '' && lastName === '') {
-      this.onShowFirstNameErrorMsg()
-      this.onShowLastNameErrorMsg()
+      this.handleFirstNameBlur()
+      this.handleLastNameBlur()
     } else if (firstName === '' && lastName !== '') {
-      this.onShowFirstNameErrorMsg()
+      this.handleFirstNameBlur()
     } else if (firstName !== '' && lastName === '') {
-      this.onShowLastNameErrorMsg()
+      this.handleLastNameBlur()
     } else {
       this.onShowResult()
     }
   }
 
-  onChangeFirstname = event => {
+  onChangeFirstName = event => {
     const {firstName} = this.state
     this.setState({firstName: event.target.value})
     console.log(firstName)
   }
 
-  onChangeLastname = event => {
+  onChangeLastName = event => {
     const {lastName} = this.state
     this.setState({lastName: event.target.value})
     console.log(lastName)
+  }
+
+  handleFirstNameBlur = () => {
+    const {firstName} = this.state
+    if (firstName === '') {
+      this.setState({firstNameErrorMsg: true})
+    } else {
+      this.setState({firstNameErrorMsg: false})
+    }
+  }
+
+  handleLastNameBlur = () => {
+    const {lastName} = this.state
+    if (lastName === '') {
+      this.setState({lastNameErrorMsg: true})
+    } else {
+      this.setState({lastNameErrorMsg: false})
+    }
   }
 
   renderFormCard = () => {
@@ -62,9 +76,10 @@ class RegistrationForm extends Component {
         <br />
         <input
           type="text"
-          id="fisrtName"
+          id="firstName"
           className={`inputs ${firstNameErrorMsg ? 'error-msg' : 'normal'}`}
-          onChange={this.onChangeFirstname}
+          onChange={this.onChangeFirstName}
+          onBlur={this.handleFirstNameBlur}
         />
         {firstNameErrorMsg && <p className="error">Required</p>}
         <br />
@@ -76,7 +91,8 @@ class RegistrationForm extends Component {
           type="text"
           id="lastName"
           className={`inputs ${lastNameErrorMsg ? 'error-msg' : 'normal'}`}
-          onChange={this.onChangeLastname}
+          onChange={this.onChangeLastName}
+          onBlur={this.handleLastNameBlur}
         />
         {lastNameErrorMsg && <p className="error">Required</p>}
         <br />
